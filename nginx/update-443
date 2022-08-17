@@ -1,0 +1,5 @@
+#!/bin/bash
+echo 'update Nginx ..'
+
+sudo rm -rf /etc/nginx/sites-available/default 
+sudo mv default-443  /etc/nginx/sites-available/default

@@ -1,0 +1,5 @@
+#!/bin/bash
+echo 'update Nginx ..'
+
+sudo rm -rf /etc/nginx/sites-available/default 
+sudo mv default  /etc/nginx/sites-available/default

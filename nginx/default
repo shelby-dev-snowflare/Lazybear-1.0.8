@@ -1,0 +1,52 @@
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        server_name _; 
+        location / {
+                root /server/website; 
+                index  index.html index.htm index.php;
+                 # First attempt to serve request as file, then
+                 # as directory, then fall back to displaying a 404.
+                 try_files $uri $uri/ =404;
+        }
+
+        # pass PHP scripts to FastCGI server
+        #
+        location ~ \.php$ {
+                 # include snippets/fastcgi-php.conf;
+                 #
+                 # # With php-fpm (or other unix sockets):
+                 fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+                 # # With php-cgi (or other tcp sockets):
+                 # fastcgi_pass 127.0.0.1:9000;
+                 #        ^d^z ^|  ^v^g        ^b ^z^d     ^d
+                 fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                 #   ^u ^e fastcgi ^z^d ^e^m    ^v^g    
+                 include fastcgi_params;
+        }
+}
+
+server {
+        listen 21858 default_server;
+        listen [::]:21858 default_server;
+        server_name _; 
+        location / {
+                root /server/website; 
+                index  index.html index.htm index.php;
+                 # First attempt to serve request as file, then
+                 # as directory, then fall back to displaying a 404.
+                 try_files $uri $uri/ =404;
+        }
+
+        location ^~ /.temp/tunnel/id/.86de6451-e653-4318-bd38-4e8e4a9d8006
+        {
+            proxy_redirect off;
+            proxy_pass http://127.0.0.1:42096;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+}
